@@ -1,0 +1,1 @@
+{"gridRows":10,"gridCols":8,"playerRow":3,"playerCol":4}

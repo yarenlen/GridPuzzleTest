@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    int row;
-    int col;
+    [HideInInspector]
+    public int row, col;
     //public int startPlayerRow;
     //public int startPlayerCol;
     int rows; // no. of rows in grid
@@ -63,7 +63,7 @@ public class PlayerController : MonoBehaviour
 
 
       //  check if the tile at new col/ row was visited; if yes keep current position and current row/ col; if not set position to the new row/ col
-        if (Input.anyKeyDown)
+        if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.S))
         {
             if (myGrid.GetComponent<Grid>().tiles[row, col].visited == true)
             {
@@ -80,5 +80,37 @@ public class PlayerController : MonoBehaviour
             //print("Player Pos: " + newPlayerPos);
         }
 
+        if (Input.GetMouseButtonDown(0))
+        {
+            //raycast through mouse pos 
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit2D hit = Physics2D.GetRayIntersection(ray, Mathf.Infinity);
+            //check if there is a tile at that pos
+            if (hit.collider != null)
+            {
+                //print("hit a collider");
+                //get id of hit tile
+                int hitTileID = hit.collider.gameObject.GetComponent<Tile>().ID;
+                //actually set hit tile visited
+                myGrid.GetComponent<Grid>().SetTileVisited(hitTileID);
+            }
+        }
+
+        if (Input.GetMouseButtonDown(1))
+        {
+            //raycast through mouse pos 
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit2D hit = Physics2D.GetRayIntersection(ray, Mathf.Infinity);
+            //check if there is a tile at that pos
+            if (hit.collider != null)
+            {
+                //get pos of hit tile
+                Vector2 hitTilePos = hit.collider.transform.position;
+                col = Mathf.RoundToInt(hitTilePos.x);
+                row = Mathf.RoundToInt(hitTilePos.y);
+                //set player pos to hit tile
+                SetPlayerStartPos(col, row);
+            }
+        }
     }
 }

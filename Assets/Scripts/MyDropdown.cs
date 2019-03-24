@@ -12,7 +12,13 @@ public class MyDropdown : MonoBehaviour
     Dropdown dropdown;
     int saveID = 0;
 
-    void Start()
+
+    private void Start()
+    {
+        UpdateDropdown();
+    }
+
+    public void UpdateDropdown()
     {
         while (File.Exists(Application.dataPath + "/saves/save_" + saveID + ".txt"))
         {
@@ -22,8 +28,9 @@ public class MyDropdown : MonoBehaviour
 
         dropdown = GetComponent<Dropdown>();
         //Clear the old options of the Dropdown menu
-        dropdown.ClearOptions();
+        if (dropdown.options != null) { dropdown.ClearOptions(); }
         //Add the options created in the List above
         dropdown.AddOptions(dropOptions);
+        //print("dropdown updated");
     }
 }

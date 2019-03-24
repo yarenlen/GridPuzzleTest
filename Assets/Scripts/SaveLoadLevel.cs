@@ -11,10 +11,8 @@ public class SaveLoadLevel : MonoBehaviour
     int saveID = 0;
     int loadID = 0;
     //variables to store in save
-    public int _gridRows;
-    public int _gridCols;
-    public int _playerRow;
-    public int _playerCol;
+    public int _playerRow, _playerCol;
+    List<int> _visitedTileIDs;
     
     public GameObject dropdownmenu;
     public GameObject player;
@@ -26,12 +24,16 @@ public class SaveLoadLevel : MonoBehaviour
        
     public void Save()
     {
+        //find the current active grid and the player
+        Grid currentGrid = GameObject.Find("Grid").GetComponent<Grid>();
+
         //new save Object to store variables
-        saveObject saveObject = new saveObject { 
-            gridRows = _gridRows, 
-            gridCols = _gridCols, 
-            playerRow = _playerRow, 
-            playerCol = _playerCol, 
+        saveObject saveObject = new saveObject {
+            gridRows = currentGrid.rows,
+            gridCols = currentGrid.cols,
+            playerRow = player.GetComponent<PlayerController>().row,
+            playerCol = player.GetComponent<PlayerController>().col,
+            visitedTileIDs = currentGrid.visitedTileIDs,                   
         };
 
         //generate new saveID, that wasn't used before
@@ -39,6 +41,7 @@ public class SaveLoadLevel : MonoBehaviour
         {
             saveID++;
         }
+       
         //convert saveObject to json string 
         //toJson returns a string, we save it in the string called saveString
         string saveString = JsonUtility.ToJson(saveObject);
@@ -58,15 +61,21 @@ public class SaveLoadLevel : MonoBehaviour
             string saveString = File.ReadAllText(path + "/save_" + loadID + ".txt");
             //convert from string to saveObject
             saveObject saveObject = JsonUtility.FromJson<saveObject>(saveString);
-            print("Laoded" + saveString);
+            print("Loaded save_" + loadID + ": "  + saveString);
 
             //assign the variables from the saveObejct to generate the grid
-            //to the grid
-            GetComponent<Grid>().ClearGrid();
-            GetComponent<Grid>().GenerateGrid(saveObject.gridRows, saveObject.gridCols);
-            //to the player
+            Grid myGrid = GetComponent<Grid>();
+            //make grid
+            //myGrid.ClearGrid();
+            myGrid.GenerateGrid(saveObject.gridRows, saveObject.gridCols);
+            //set visited tiles
+            foreach (int tileID in saveObject.visitedTileIDs)
+            {
+                myGrid.SetTileVisited(tileID);
+            }
+            //set player
             player.GetComponent<PlayerController>().SetPlayerStartPos(saveObject.playerCol, saveObject.playerRow);
-            GetComponent<Grid>().ColorTileAtPlayerPos();
+            myGrid.ColorTileAtPlayerPos();
         } else {
             Debug.LogWarning("No Save with ID: " + loadID);
         }
@@ -74,10 +83,12 @@ public class SaveLoadLevel : MonoBehaviour
 
     }
 
+    //contains all variables we want to store 
     public class saveObject {
         public int gridRows;
         public int gridCols;
         public int playerRow;
         public int playerCol;
+        public List<int> visitedTileIDs;
     }
 }

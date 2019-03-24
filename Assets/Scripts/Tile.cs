@@ -6,6 +6,7 @@ public class Tile : MonoBehaviour
 {
     public SpriteRenderer spriteRenderer;
     public bool visited;
+    public int ID;
 
 
     private void Awake()

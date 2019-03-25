@@ -2,12 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class UI : MonoBehaviour
 {
     public Slider rowsSlider, colsSlider;
     public Grid grid;
     public PlayerController player;
+    public GameObject LevelEditorUI;
+    public GameObject LoadLevelUI;
 
     // Start is called before the first frame update
     void Start()
@@ -33,5 +36,15 @@ public class UI : MonoBehaviour
         //reset grid
         grid.GenerateGrid(Mathf.RoundToInt(rowsSlider.value), Mathf.RoundToInt(colsSlider.value));
         player.SetPlayerStartPos(0,0);
+    }
+
+    public void OpenLevelEditor()
+    {
+        SceneManager.LoadScene("LevelEditor");
+    }
+
+    public void OpenMainMenu() 
+    {
+        SceneManager.LoadScene("Main");
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
@@ -13,15 +14,14 @@ public class PlayerController : MonoBehaviour
 
     Vector3 newPlayerPos;
     public GameObject myGrid;
-   
+
     int currentPlayerRow;
     int currentPlayerCol;
-    
 
     // Start is called before the first frame update
     void Start()
     {
-     
+
     }
 
     public void SetPlayerStartPos(int startPlayerCol, int startPlayerRow)
@@ -40,10 +40,10 @@ public class PlayerController : MonoBehaviour
         rows = myGrid.GetComponent<Grid>().rows;
         cols = myGrid.GetComponent<Grid>().cols;
 
-        if (Input.GetKeyDown(KeyCode.W) && row < rows -1)
+        if (Input.GetKeyDown(KeyCode.W) && row < rows - 1)
         {
             //print("move one row up");
-            row = row + 1;            
+            row = row + 1;
         }
         else if (Input.GetKeyDown(KeyCode.A) && col > 0)
         {
@@ -62,7 +62,7 @@ public class PlayerController : MonoBehaviour
         }
 
 
-      //  check if the tile at new col/ row was visited; if yes keep current position and current row/ col; if not set position to the new row/ col
+        //  check if the tile at new col/ row was visited; if yes keep current position and current row/ col; if not set position to the new row/ col
         if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.S))
         {
             if (myGrid.GetComponent<Grid>().tiles[row, col].visited == true)
@@ -80,36 +80,41 @@ public class PlayerController : MonoBehaviour
             //print("Player Pos: " + newPlayerPos);
         }
 
-        if (Input.GetMouseButtonDown(0))
-        {
-            //raycast through mouse pos 
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit2D hit = Physics2D.GetRayIntersection(ray, Mathf.Infinity);
-            //check if there is a tile at that pos
-            if (hit.collider != null)
-            {
-                //print("hit a collider");
-                //get id of hit tile
-                int hitTileID = hit.collider.gameObject.GetComponent<Tile>().ID;
-                //actually set hit tile visited
-                myGrid.GetComponent<Grid>().SetTileVisited(hitTileID);
-            }
-        }
+       
 
-        if (Input.GetMouseButtonDown(1))
+        if (SceneManager.GetActiveScene().name == "LevelEditor")
         {
-            //raycast through mouse pos 
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit2D hit = Physics2D.GetRayIntersection(ray, Mathf.Infinity);
-            //check if there is a tile at that pos
-            if (hit.collider != null)
+            if (Input.GetMouseButtonDown(0))
             {
-                //get pos of hit tile
-                Vector2 hitTilePos = hit.collider.transform.position;
-                col = Mathf.RoundToInt(hitTilePos.x);
-                row = Mathf.RoundToInt(hitTilePos.y);
-                //set player pos to hit tile
-                SetPlayerStartPos(col, row);
+                //raycast through mouse pos 
+                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                RaycastHit2D hit = Physics2D.GetRayIntersection(ray, Mathf.Infinity);
+                //check if there is a tile at that pos
+                if (hit.collider != null)
+                {
+                    //print("hit a collider");
+                    //get id of hit tile
+                    int hitTileID = hit.collider.gameObject.GetComponent<Tile>().ID;
+                    //actually set hit tile visited
+                    myGrid.GetComponent<Grid>().SetTileVisited(hitTileID);
+                }
+            }
+
+            if (Input.GetMouseButtonDown(1))
+            {
+                //raycast through mouse pos 
+                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                RaycastHit2D hit = Physics2D.GetRayIntersection(ray, Mathf.Infinity);
+                //check if there is a tile at that pos
+                if (hit.collider != null)
+                {
+                    //get pos of hit tile
+                    Vector2 hitTilePos = hit.collider.transform.position;
+                    col = Mathf.RoundToInt(hitTilePos.x);
+                    row = Mathf.RoundToInt(hitTilePos.y);
+                    //set player pos to hit tile
+                    SetPlayerStartPos(col, row);
+                }
             }
         }
     }

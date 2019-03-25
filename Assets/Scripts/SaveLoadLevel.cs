@@ -14,12 +14,21 @@ public class SaveLoadLevel : MonoBehaviour
     public int _playerRow, _playerCol;
     List<int> _visitedTileIDs;
     
-    public GameObject dropdownmenu;
+    public Dropdown dropdownmenu;
     public GameObject player;
 
     void Awake()
     {
-        path = Application.dataPath + "/saves";
+        //path were files are saved
+        path = Application.dataPath + "/levels";
+
+        //check if directory exists, if not create it
+        if (Directory.Exists(path))
+        {
+            return;
+        } else { 
+            var folder = Directory.CreateDirectory(path); // returns a DirectoryInfo object
+        }
     }
        
     public void Save()
@@ -37,7 +46,7 @@ public class SaveLoadLevel : MonoBehaviour
         };
 
         //generate new saveID, that wasn't used before
-        while (File.Exists(path + "/save_" + saveID + ".txt"))
+        while (File.Exists(path + "/level_" + saveID + ".txt"))
         {
             saveID++;
         }
@@ -47,21 +56,21 @@ public class SaveLoadLevel : MonoBehaviour
         string saveString = JsonUtility.ToJson(saveObject);
         print("Saved: "+ saveString);
         //write that string in a txt file 
-        File.WriteAllText(path + "/save_" + saveID + ".txt", saveString);
+        File.WriteAllText(path + "/level_" + saveID + ".txt", saveString);
     }
 
     public void Load()
     {
         //get the value of currently selected option in dropdown
-        loadID = dropdownmenu.GetComponent<Dropdown>().value;
+        loadID = dropdownmenu.value;
         //check if save with that value/ID exists 
-        if (File.Exists(path + "/save_" + loadID + ".txt"))
+        if (File.Exists(path + "/level_" + loadID + ".txt"))
         {
             //Read from save
-            string saveString = File.ReadAllText(path + "/save_" + loadID + ".txt");
+            string saveString = File.ReadAllText(path + "/level_" + loadID + ".txt");
             //convert from string to saveObject
             saveObject saveObject = JsonUtility.FromJson<saveObject>(saveString);
-            print("Loaded save_" + loadID + ": "  + saveString);
+            print("Loaded Level_" + loadID + ": "  + saveString);
 
             //assign the variables from the saveObejct to generate the grid
             Grid myGrid = GetComponent<Grid>();
@@ -77,7 +86,25 @@ public class SaveLoadLevel : MonoBehaviour
             player.GetComponent<PlayerController>().SetPlayerStartPos(saveObject.playerCol, saveObject.playerRow);
             myGrid.ColorTileAtPlayerPos();
         } else {
-            Debug.LogWarning("No Save with ID: " + loadID);
+            Debug.LogWarning("No Level with ID: " + loadID);
+        }
+    }
+
+    public void LoadNext()
+    {
+        loadID++;
+        //get the number of options in the dropdown 
+        int options = dropdownmenu.options.Count;
+        //if loadId is smaller than number of options load next.
+        if (loadID < options)
+        {
+            dropdownmenu.value = loadID;
+            Load();
+        }
+        else //finish game
+        {
+            Debug.LogWarning("Juhu! Last Level FINISHED");
+            player.SetActive(false);
         }
 
 

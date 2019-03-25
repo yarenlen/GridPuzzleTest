@@ -8,7 +8,6 @@ public class Grid : MonoBehaviour
     public Color visitedTileColor;
     public GameObject basicTile;
     public GameObject player;
-    public GameObject text;
 
     public int rows, cols;
 
@@ -110,7 +109,7 @@ public class Grid : MonoBehaviour
         tiles[row, col].spriteRenderer.color = visitedTileColor;
         //add to list of visited tiles
         visitedTileIDs.Add(tiles[row, col].ID);
-        print("Tile visited");
+        //print("Tile visited");
     }
 
     public void ColorTileAtPlayerPos()
@@ -144,8 +143,9 @@ public class Grid : MonoBehaviour
             }
         }
 
-        
-        text.SetActive(true);
+        //what happens when player finishes a level?
         print("ALL TILES Visited!");
+        //load next level
+        GetComponent<SaveLoadLevel>().LoadNext();
     }
 }

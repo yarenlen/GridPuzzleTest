@@ -20,9 +20,9 @@ public class MyDropdown : MonoBehaviour
 
     public void UpdateDropdown()
     {
-        while (File.Exists(Application.dataPath + "/saves/save_" + saveID + ".txt"))
+        while (File.Exists(Application.dataPath + "/levels/level_" + saveID + ".txt"))
         {
-            dropOptions.Add("save_" + saveID); 
+            dropOptions.Add("Level_" + saveID); 
             saveID++;
         }
 

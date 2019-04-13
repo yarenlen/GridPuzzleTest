@@ -590,7 +590,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Menu
+  m_Text: Back
 --- !u!222 &206305160
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -2242,7 +2242,7 @@ GameObject:
   - component: {fileID: 982436954}
   - component: {fileID: 982436953}
   m_Layer: 0
-  m_Name: MenuButton
+  m_Name: BackButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

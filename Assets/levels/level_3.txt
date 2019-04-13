@@ -1,1 +1,0 @@
-{"gridRows":4,"gridCols":4,"playerRow":0,"playerCol":0,"visitedTileIDs":[]}

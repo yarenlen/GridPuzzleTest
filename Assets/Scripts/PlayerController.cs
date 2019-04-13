@@ -84,6 +84,7 @@ public class PlayerController : MonoBehaviour
 
         if (SceneManager.GetActiveScene().name == "LevelEditor")
         {
+            //set tile visites
             if (Input.GetMouseButtonDown(0))
             {
                 //raycast through mouse pos 
@@ -99,7 +100,7 @@ public class PlayerController : MonoBehaviour
                     myGrid.GetComponent<Grid>().SetTileVisited(hitTileID);
                 }
             }
-
+            //set new start pos of player
             if (Input.GetMouseButtonDown(1))
             {
                 //raycast through mouse pos 
